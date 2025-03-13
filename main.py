@@ -12,8 +12,11 @@ class VideoCompressorApp:
 
         self.create_video_selection()
         self.create_crf_quality_slider()
+        self.create_frame_rate_combobox()
+
         self.create_output_format_combobox()
         self.create_video_compress_button()
+
 
     def create_video_compress_button(self):
         self.compress_button = tk.Button(root, text="Compress Video", command=self.compress_video)
@@ -39,6 +42,14 @@ class VideoCompressorApp:
         self.output_format = ttk.Combobox(self.root, values=["mp4", "webm", "avi", "mov"], state="readonly")
         self.output_format.set("mp4")  # Default value
         self.output_format.pack(pady=10)
+
+    def create_frame_rate_combobox(self):
+        frame_rate_label = tk.Label(self.root, text="Select Frame Rate (fps):")
+        frame_rate_label.pack(pady=10)
+
+        self.frame_rate = ttk.Combobox(self.root, values=["12", "24", "30", "60"], state="readonly")
+        self.frame_rate.set("60")  # Default value
+        self.frame_rate.pack(pady=10)
 
     def select_video(self):
         self.video_path = filedialog.askopenfilename(title="Select Video File", filetypes=[("Video Files", "*.mp4;*.avi;*.mov;*.webm")])
@@ -67,7 +78,8 @@ class VideoCompressorApp:
                 'ffmpeg',
                 '-i', self.video_path,
                 '-vcodec', codec,
-                '-crf', str(self.crf_value.get()),
+                '-crf', str(self.crf_value.get()), # CRF Quality.
+                '-r', self.frame_rate.get(), # Framerate.
                 output_path
             ]
 
