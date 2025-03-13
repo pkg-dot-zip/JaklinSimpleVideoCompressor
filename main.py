@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox
 from tkinter import ttk
 import subprocess
 import os
+import threading
 
 class VideoCompressorApp:
     video_file_formats = [
@@ -163,11 +164,30 @@ class VideoCompressorApp:
                 output_path
             ]
 
-            try:
-                subprocess.run(command, check=True)
-                messagebox.showinfo("Success", f"Video compressed successfully!\nSaved as: {output_path}")
-            except subprocess.CalledProcessError as e:
-                messagebox.showerror("Error", f"An error occurred during compression:\n{e}")
+            # Create a Toplevel window for progress indication
+            progress_window = tk.Toplevel(self.root)
+            progress_window.title("Compressing Video")
+            progress_window.geometry("300x100")
+            progress_label = tk.Label(progress_window, text="Compressing video, please wait...")
+            progress_label.pack(pady=10)
+
+            # Create a progress bar
+            progress_bar = ttk.Progressbar(progress_window, mode='indeterminate')
+            progress_bar.pack(pady=10, fill=tk.X, padx=20)
+            progress_bar.start()
+
+            def run_compression():
+                try:
+                    subprocess.run(command, check=True)
+                    messagebox.showinfo("Success", f"Video compressed successfully!\nSaved as: {output_path}")
+                except subprocess.CalledProcessError as e:
+                    messagebox.showerror("Error", f"An error occurred during compression:\n{e}")
+                finally:
+                    progress_bar.stop()
+                    progress_window.destroy()
+
+            threading.Thread(target=run_compression).start()
+
         else:
             messagebox.showwarning("No Video Selected", "Please select a video file first.")
 
