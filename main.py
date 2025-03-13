@@ -15,6 +15,7 @@ class VideoCompressorApp:
         self.create_crf_quality_slider()
         self.create_frame_rate_combobox()
         self.create_output_format_combobox()
+        self.create_resolution_field()
 
         # Audio.
         self.create_audio_bitrate_combobox()
@@ -56,6 +57,14 @@ class VideoCompressorApp:
         self.frame_rate.set("60")  # Default value
         self.frame_rate.pack(pady=10)\
 
+    def create_resolution_field(self):
+        resolution_label = tk.Label(self.root, text="Select Video Resolution (%):")
+        resolution_label.pack(pady=10)
+
+        self.resolution_entry = tk.Entry(self.root)
+        self.resolution_entry.insert(0, "100")  # Default value
+        self.resolution_entry.pack(pady=10)
+
     def create_audio_bitrate_combobox(self):
         audio_bitrate_label = tk.Label(self.root, text="Select Audio Bitrate (kbps):")
         audio_bitrate_label.pack(pady=10)
@@ -87,6 +96,13 @@ class VideoCompressorApp:
                 messagebox.showerror("Error", "Unsupported format selected.")
                 return
 
+            # Get the resolution percentage from the entry field
+            resolution_percentage = self.resolution_entry.get()
+            if not resolution_percentage.isdigit() or not (1 <= int(resolution_percentage) <= 100):
+                messagebox.showerror("Error", "Please enter a valid percentage (1-100).")
+                return
+            scale = int(resolution_percentage) / 100.0
+
             command = [
                 'ffmpeg',
                 '-i', self.video_path,
@@ -94,6 +110,7 @@ class VideoCompressorApp:
                 '-crf', str(self.crf_value.get()), # CRF Quality.
                 '-r', self.frame_rate.get(), # Framerate.
                 '-b:a', f"{self.audio_bitrate.get()}k",  # Set the audio bitrate
+                '-vf', f'scale=iw*{scale}:ih*{scale}',  # Scale (resolution)
                 output_path
             ]
 
