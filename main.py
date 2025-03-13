@@ -10,13 +10,23 @@ class VideoCompressorApp:
         self.root.title("Video Compression Application")
         self.root.geometry("400x400")
 
+        self.create_video_selection()
+        self.create_crf_quality_slider()
+        self.create_output_format_combobox()
+        self.create_video_compress_button()
+
+    def create_video_compress_button(self):
+        self.compress_button = tk.Button(root, text="Compress Video", command=self.compress_video)
+        self.compress_button.pack(pady=10)
+
+    def create_video_selection(self):
         self.label = tk.Label(root, text="Select a video file to compress:")
         self.label.pack(pady=10)
 
         self.select_button = tk.Button(root, text="Select Video", command=self.select_video)
         self.select_button.pack(pady=10)
 
-        # CRF Quality Slider.
+    def create_crf_quality_slider(self):
         self.crf_label = tk.Label(root, text="Select CRF Quality (0-51):")
         self.crf_label.pack(pady=10)
 
@@ -25,13 +35,10 @@ class VideoCompressorApp:
         self.crf_slider = tk.Scale(root, from_=0, to=51, orient=tk.HORIZONTAL, length=300, variable=self.crf_value)
         self.crf_slider.pack(pady=10)
 
-        # Combobox format selection.
-        self.output_format = ttk.Combobox(root, values=["mp4", "webm", "avi", "mov"], state="readonly")
+    def create_output_format_combobox(self):
+        self.output_format = ttk.Combobox(self.root, values=["mp4", "webm", "avi", "mov"], state="readonly")
         self.output_format.set("mp4")  # Default value
         self.output_format.pack(pady=10)
-
-        self.compress_button = tk.Button(root, text="Compress Video", command=self.compress_video)
-        self.compress_button.pack(pady=10)
 
     def select_video(self):
         self.video_path = filedialog.askopenfilename(title="Select Video File", filetypes=[("Video Files", "*.mp4;*.avi;*.mov;*.webm")])
