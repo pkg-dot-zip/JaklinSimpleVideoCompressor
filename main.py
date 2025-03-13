@@ -49,42 +49,60 @@ class VideoCompressorApp:
         self.select_button.pack(pady=10)
 
     def create_crf_quality_slider(self):
-        self.crf_label = tk.Label(root, text="Select CRF Quality (0-51):")
-        self.crf_label.pack(pady=10)
+        frame = tk.Frame(self.root)
+        frame.pack(pady=10)
 
-        self.crf_value = tk.IntVar(value=23)  # Instance variable to hold the CRF value
+        crf_label = tk.Label(frame, text="CRF Quality (0-51):")
+        crf_label.pack(side=tk.LEFT)
 
-        self.crf_slider = tk.Scale(root, from_=0, to=51, orient=tk.HORIZONTAL, length=300, variable=self.crf_value)
-        self.crf_slider.pack(pady=10)
+        self.crf_value = tk.IntVar(value=23)
+
+        self.crf_slider = tk.Scale(frame, from_=0, to=51, orient=tk.HORIZONTAL, length=300, variable=self.crf_value)
+        self.crf_slider.pack(side=tk.RIGHT)
 
     def create_output_format_combobox(self):
-        self.output_format = ttk.Combobox(self.root, values=self.video_file_formats, state="readonly")
-        self.output_format.set("mp4")  # Default value
-        self.output_format.pack(pady=10)
+        frame = tk.Frame(self.root)
+        frame.pack(pady=10)
+
+        frame_rate_label = tk.Label(frame, text="Format:")
+        frame_rate_label.pack(side=tk.LEFT)
+
+        self.output_format = ttk.Combobox(frame, values=self.video_file_formats, state="readonly")
+        self.output_format.set("mp4")
+        self.output_format.pack(side=tk.RIGHT)
 
     def create_frame_rate_combobox(self):
-        frame_rate_label = tk.Label(self.root, text="Select Frame Rate (fps):")
-        frame_rate_label.pack(pady=10)
+        frame = tk.Frame(self.root)
+        frame.pack(pady=10)
 
-        self.frame_rate = ttk.Combobox(self.root, values=["12", "24", "30", "60"], state="readonly")
-        self.frame_rate.set("60")  # Default value
-        self.frame_rate.pack(pady=10)\
+        frame_rate_label = tk.Label(frame, text="Frame Rate (fps):")
+        frame_rate_label.pack(side=tk.LEFT)
+
+        self.frame_rate = ttk.Combobox(frame, values=["12", "24", "30", "60"], state="readonly")
+        self.frame_rate.set("60")
+        self.frame_rate.pack(side=tk.RIGHT)\
 
     def create_resolution_field(self):
-        resolution_label = tk.Label(self.root, text="Select Video Resolution (%):")
-        resolution_label.pack(pady=10)
+        frame = tk.Frame(self.root)
+        frame.pack(pady=10)
 
-        self.resolution_entry = tk.Entry(self.root)
-        self.resolution_entry.insert(0, "100")  # Default value
-        self.resolution_entry.pack(pady=10)
+        resolution_label = tk.Label(frame, text="Video Resolution (%):")
+        resolution_label.pack(side=tk.LEFT)
+
+        self.resolution_entry = tk.Entry(frame)
+        self.resolution_entry.insert(0, "100")
+        self.resolution_entry.pack(side=tk.RIGHT)
 
     def create_audio_bitrate_combobox(self):
-        audio_bitrate_label = tk.Label(self.root, text="Select Audio Bitrate (kbps):")
-        audio_bitrate_label.pack(pady=10)
+        frame = tk.Frame(self.root)
+        frame.pack(pady=10)
 
-        self.audio_bitrate = ttk.Combobox(self.root, values=["64", "96", "128", "192", "256"], state="readonly")
+        audio_bitrate_label = tk.Label(frame, text="Audio Bitrate (kbps):")
+        audio_bitrate_label.pack(side=tk.LEFT)
+
+        self.audio_bitrate = ttk.Combobox(frame, values=["64", "96", "128", "192", "256"], state="readonly")
         self.audio_bitrate.set("192")
-        self.audio_bitrate.pack(pady=10)
+        self.audio_bitrate.pack(side=tk.RIGHT)
 
     def select_video(self):
         filetypes = [("Video Files", f"*.{ext}") for ext in self.video_file_formats]
