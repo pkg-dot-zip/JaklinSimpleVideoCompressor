@@ -10,11 +10,16 @@ class VideoCompressorApp:
         self.root.title("Video Compression Application")
         self.root.geometry("400x400")
 
+        # Video.
         self.create_video_selection()
         self.create_crf_quality_slider()
         self.create_frame_rate_combobox()
-
         self.create_output_format_combobox()
+
+        # Audio.
+        self.create_audio_bitrate_combobox()
+
+
         self.create_video_compress_button()
 
 
@@ -49,7 +54,15 @@ class VideoCompressorApp:
 
         self.frame_rate = ttk.Combobox(self.root, values=["12", "24", "30", "60"], state="readonly")
         self.frame_rate.set("60")  # Default value
-        self.frame_rate.pack(pady=10)
+        self.frame_rate.pack(pady=10)\
+
+    def create_audio_bitrate_combobox(self):
+        audio_bitrate_label = tk.Label(self.root, text="Select Audio Bitrate (kbps):")
+        audio_bitrate_label.pack(pady=10)
+
+        self.audio_bitrate = ttk.Combobox(self.root, values=["64", "96", "128", "192", "256"], state="readonly")
+        self.audio_bitrate.set("192")
+        self.audio_bitrate.pack(pady=10)
 
     def select_video(self):
         self.video_path = filedialog.askopenfilename(title="Select Video File", filetypes=[("Video Files", "*.mp4;*.avi;*.mov;*.webm")])
@@ -80,6 +93,7 @@ class VideoCompressorApp:
                 '-vcodec', codec,
                 '-crf', str(self.crf_value.get()), # CRF Quality.
                 '-r', self.frame_rate.get(), # Framerate.
+                '-b:a', f"{self.audio_bitrate.get()}k",  # Set the audio bitrate
                 output_path
             ]
 
