@@ -23,6 +23,10 @@ class VideoCompressorApp:
         self.root = root
         self.root.title("Video Compression Application")
 
+        # Set a theme
+        style = ttk.Style()
+        style.theme_use("clam")
+
         # Video.
         self.create_video_selection()
         self.create_crf_quality_slider()
