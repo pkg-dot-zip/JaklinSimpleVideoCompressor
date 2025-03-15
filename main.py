@@ -14,9 +14,6 @@ class VideoCompressorApp:
         "wmv",
         "mkv",
         "flv",
-        "mpeg",
-        "3gp",
-        "hevc"
     ]
 
     def __init__(self, root):
