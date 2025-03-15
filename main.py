@@ -69,7 +69,7 @@ class VideoCompressorApp:
         format_label = tk.Label(self.root, text="Format:")
         format_label.grid(row=3, column=0, sticky=tk.W, padx=10)
 
-        self.output_format = ttk.Combobox(self.root, values=["mp4", "avi", "mkv"], state="readonly")
+        self.output_format = ttk.Combobox(self.root, values=self.video_file_formats, state="readonly")
         self.output_format.set("mp4")
         self.output_format.grid(row=3, column=1, padx=10)
 
