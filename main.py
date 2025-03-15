@@ -113,23 +113,24 @@ class VideoCompressorApp:
 
             command = [
                 'ffmpeg',
+                '-y', # This forces overwriting the file; no user input in terminal.
                 '-i', self.video_path,
                 '-vcodec', codec,
                 '-crf', str(self.crf_value.get()), # CRF Quality.
                 '-r', self.frame_rate.get(), # Framerate.
-                '-b:a', f"{self.audio_bitrate.get()}k",  # Set the audio bitrate
-                '-vf', f'scale=iw*{scale}:ih*{scale}',  # Scale (resolution)
+                '-b:a', f"{self.audio_bitrate.get()}k",  # Set the audio bitrate.
+                '-vf', f'scale=iw*{scale}:ih*{scale}',  # Scale (resolution).
                 output_path
             ]
 
-            # Create a Toplevel window for progress indication
+            # Progress window.
             progress_window = tk.Toplevel(self.root)
             progress_window.title("Compressing Video")
             progress_window.geometry("300x100")
             progress_label = tk.Label(progress_window, text="Compressing video, please wait...")
             progress_label.pack(pady=10)
 
-            # Create a progress bar
+            # Progress bar in window.
             progress_bar = ttk.Progressbar(progress_window, mode='indeterminate')
             progress_bar.pack(pady=10, fill=tk.X, padx=20)
             progress_bar.start()
