@@ -1,21 +1,14 @@
+import os
+import subprocess
+import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter import ttk
-import subprocess
-import os
-import threading
+
+from VideoFormatHandler import VideoFormatHandler
+
 
 class VideoCompressorApp:
-    video_file_formats = [
-        "mp4",
-        "webm",
-        "avi",
-        "mov",
-        "wmv",
-        "mkv",
-        "flv",
-    ]
-
     def __init__(self, root):
         self.root = root
         self.root.title("Video Compression Application")
@@ -66,7 +59,7 @@ class VideoCompressorApp:
         format_label = tk.Label(self.root, text="Format:")
         format_label.grid(row=3, column=0, sticky=tk.W, padx=10)
 
-        self.output_format = ttk.Combobox(self.root, values=self.video_file_formats, state="readonly")
+        self.output_format = ttk.Combobox(self.root, values=VideoFormatHandler.video_file_formats, state="readonly")
         self.output_format.set("mp4")
         self.output_format.grid(row=3, column=1, padx=10)
 
@@ -95,34 +88,10 @@ class VideoCompressorApp:
         self.audio_bitrate.grid(row=6, column=1, padx=10)
 
     def select_video(self):
-        filetypes = [("Video Files", f"*.{ext}") for ext in self.video_file_formats]
+        filetypes = [("Video Files", f"*.{ext}") for ext in VideoFormatHandler.video_file_formats]
         self.video_path = filedialog.askopenfilename(title="Select Video File", filetypes=filetypes)
         if self.video_path:
             messagebox.showinfo("Selected Video", f"Selected: {self.video_path}")
-
-    def get_codec(self, output_format):
-        if output_format == "mp4":
-            return "libx264"
-        elif output_format == "webm":
-            return "libvpx"
-        elif output_format == "avi":
-            return "mpeg4"
-        elif output_format == "mov":
-            return "libx264"
-        elif output_format == "wmv":
-            return "wmv2"
-        elif output_format == "mkv":
-            return "libx264"
-        elif output_format == "flv":
-            return "flv"
-        elif output_format == "mpeg":
-            return "mpeg2video"
-        elif output_format == "3gp":
-            return "libx264"
-        elif output_format == "hevc":
-            return "libx265"
-        else:
-            return None  # Unsupported format
 
     def compress_video(self):
         if hasattr(self, 'video_path'):
@@ -130,7 +99,7 @@ class VideoCompressorApp:
             output_path = os.path.splitext(self.video_path)[0] + f"_compressed.{output_format}"
 
             # Set the appropriate codec based on the selected format
-            codec = self.get_codec(output_format)
+            codec = VideoFormatHandler.get_codec(output_format)
             if codec is None:
                 messagebox.showerror("Error", "Unsupported format selected.")
                 return
