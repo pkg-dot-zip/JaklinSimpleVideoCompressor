@@ -11,7 +11,7 @@ from VideoFormatHandler import VideoFormatHandler
 class VideoCompressorApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Video Compression Application")
+        self.root.title("Jaklin Video Compressor")
 
         # Set a theme
         style = ttk.Style()
@@ -151,5 +151,6 @@ class VideoCompressorApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.iconbitmap("resources/favicon.ico") # Made with Icon Kitchen! :)
     app = VideoCompressorApp(root)
     root.mainloop()
