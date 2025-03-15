@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox
@@ -152,6 +153,15 @@ class VideoCompressorApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.iconbitmap("resources/favicon.ico") # Made with Icon Kitchen! :)
+
+    # Set the window icon
+    if getattr(sys, 'frozen', False):
+        # If the application is frozen (running as an executable)
+        icon_path = os.path.join(sys._MEIPASS, "resources/favicon.ico")
+    else:
+        # If running in a normal Python environment
+        icon_path = "resources/favicon.ico"
+
+    root.iconbitmap(icon_path) # Made with Icon Kitchen! :)
     app = VideoCompressorApp(root)
     root.mainloop()
