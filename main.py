@@ -1,41 +1,38 @@
 import os
 import subprocess
-import sys
 import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter import ttk
 
 from VideoFormatHandler import VideoFormatHandler
-
+from GuiUtil import GuiUtil
+from ProgressGuiHandler import ProgressGuiHandler
 
 class VideoCompressorApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Jaklin Video Compressor")
 
-        # Set a theme
-        style = ttk.Style()
-        style.theme_use("clam")
+        GuiUtil.configure_theme()
 
-        # Video.
+        self.add_video_config()
+        self.add_audio_config()
+        self.create_video_compress_button()
+
+        # Needed for sizing (?)
+        self.root.update_idletasks()
+        self.root.minsize(400, 300)
+
+    def add_video_config(self):
         self.create_video_selection()
         self.create_crf_quality_slider()
         self.create_frame_rate_combobox()
         self.create_output_format_combobox()
         self.create_resolution_field()
 
-        # Audio.
+    def add_audio_config(self):
         self.create_audio_bitrate_combobox()
-
-        self.create_video_compress_button()
-
-        # Call update_idletasks to ensure proper sizing
-        self.root.update_idletasks()
-
-        # Optionally, you can set a minimum size
-        self.root.minsize(400, 300)
-
 
     def create_video_compress_button(self):
         self.compress_button = tk.Button(self.root, text="Compress Video", command=self.compress_video)
@@ -96,22 +93,25 @@ class VideoCompressorApp:
 
     def compress_video(self):
         if hasattr(self, 'video_path'):
+
+            # Calculate dest.
             output_format = self.output_format.get()
             output_path = os.path.splitext(self.video_path)[0] + f"_compressed.{output_format}"
 
-            # Set the appropriate codec based on the selected format
+            # Get codec.
             codec = VideoFormatHandler.get_codec(output_format)
             if codec is None:
                 messagebox.showerror("Error", "Unsupported format selected.")
                 return
 
-            # Get the resolution percentage from the entry field
+            # Calculate resolution scaling.
             resolution_percentage = self.resolution_entry.get()
             if not resolution_percentage.isdigit() or not (1 <= int(resolution_percentage) <= 100):
                 messagebox.showerror("Error", "Please enter a valid percentage (1-100).")
                 return
             scale = int(resolution_percentage) / 100.0
 
+            # This is the command we are running! :)
             command = [
                 'ffmpeg',
                 '-y', # This forces overwriting the file; no user input in terminal.
@@ -124,17 +124,7 @@ class VideoCompressorApp:
                 output_path
             ]
 
-            # Progress window.
-            progress_window = tk.Toplevel(self.root)
-            progress_window.title("Compressing Video")
-            progress_window.geometry("300x100")
-            progress_label = tk.Label(progress_window, text="Compressing video, please wait...")
-            progress_label.pack(pady=10)
-
-            # Progress bar in window.
-            progress_bar = ttk.Progressbar(progress_window, mode='indeterminate')
-            progress_bar.pack(pady=10, fill=tk.X, padx=20)
-            progress_bar.start()
+            (progress_window, progress_bar) = ProgressGuiHandler.create_progress_window(self)
 
             def run_compression():
                 try:
@@ -143,25 +133,15 @@ class VideoCompressorApp:
                 except subprocess.CalledProcessError as e:
                     messagebox.showerror("Error", f"An error occurred during compression:\n{e}")
                 finally:
-                    progress_bar.stop()
-                    progress_window.destroy()
+                    ProgressGuiHandler.stop_progress_window(progress_window, progress_bar)
 
-            threading.Thread(target=run_compression).start()
+            threading.Thread(target=run_compression).start() # We run this on another thread so we can have that progress window.
 
         else:
             messagebox.showwarning("No Video Selected", "Please select a video file first.")
 
 if __name__ == "__main__":
     root = tk.Tk()
-
-    # Set the window icon
-    if getattr(sys, 'frozen', False):
-        # If the application is frozen (running as an executable)
-        icon_path = os.path.join(sys._MEIPASS, "resources/favicon.ico")
-    else:
-        # If running in a normal Python environment
-        icon_path = "resources/favicon.ico"
-
-    root.iconbitmap(icon_path) # Made with Icon Kitchen! :)
+    root.iconbitmap(GuiUtil.configure_window_icon())
     app = VideoCompressorApp(root)
     root.mainloop()
