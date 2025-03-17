@@ -50,3 +50,4 @@ I made a typo once in the terminal. This frustrated me enough to create a GUI to
 - [TKinter](https://docs.python.org/3/library/tkinter.html) - Framework used for the GUI
 - [FFMPEG](https://www.ffmpeg.org/) - Used for compressing videos
 - [PyInstaller](https://pyinstaller.org/en/stable/) - Used to bundle the application into a single _.exe_ file
+- [IconKitchen](https://icon.kitchen/) - Used to create the icon
