@@ -1,6 +1,8 @@
 import pathlib
 from enum import Enum
 
+import valid_file_types
+
 
 class SourceType(Enum):
     VIDEO = "video"
@@ -8,18 +10,13 @@ class SourceType(Enum):
     AUDIO = "audio"
 
 
-video_types = [".mp4", ".webm", ".avi"]
-image_types = [".jpg", ".jpeg", ".png", ".webp"]
-audio_types = [".mp3", ".wav", ".aiff"]
-
-
 def calc_source_type(extension: str) -> SourceType | None:
     """Returns enum with type of source file. Returns none if invalid."""
 
     # The 'endswith()' method takes in tuples, not lists, according to SO.
-    video_tuple = tuple(video_types)
-    image_tuple = tuple(image_types)
-    audio_tuple = tuple(audio_types)
+    video_tuple = tuple(valid_file_types.video_types)
+    image_tuple = tuple(valid_file_types.image_types)
+    audio_tuple = tuple(valid_file_types.audio_types)
 
     if extension.endswith(video_tuple):
         return SourceType.VIDEO
