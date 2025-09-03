@@ -13,7 +13,7 @@ image_types = [".jpg", ".jpeg", ".png", ".webp"]
 audio_types = [".mp3", ".wav", ".aiff"]
 
 
-def calc_source_type(extension: str):
+def calc_source_type(extension: str) -> SourceType | None:
     """Returns enum with type of source file. Returns none if invalid."""
 
     # The 'endswith()' method takes in tuples, not lists, according to SO.
@@ -30,10 +30,10 @@ def calc_source_type(extension: str):
     return None
 
 class SourceFile:
-    def __init__(self, filepath):
+    def __init__(self, filepath: pathlib.Path):
         self.filepath = filepath
-        self.extension = pathlib.Path(filepath).suffix.lower()
-        self.name = pathlib.Path(filepath).stem
+        self.extension = filepath.suffix.lower()
+        self.name = filepath.stem
         self.type = calc_source_type(self.extension)
 
         # Do this last.
