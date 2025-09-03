@@ -1,33 +1,24 @@
 import pathlib
-from dataclasses import dataclass
 
 import ffmpeg
 from ffmpeg import Stream
 
+from compress_settings import CompressSettings
 from source import SourceFile, SourceType
-
-
-@dataclass
-class CompressSettings:
-    """Contains settings for compressing all source files. Settings are optional if None by default."""
-    fps: int = None
-    video_bitrate: int = None
-    audio_bitrate: int = None
-    should_mute: bool = False # TODO: Implement.
-    format_to_convert_to: str = None
 
 def get_output_filepath(source: SourceFile) -> pathlib.Path:
     output_path = source.filepath.with_stem(source.filepath.stem + "_compressed").with_suffix(source.extension)
     return output_path
 
 def compress(source: SourceFile, settings: CompressSettings):
-    """Does mild validation, then directs to correct method for the sourceType."""
+    handle_compress(source, settings)
 
+def handle_compress(source: SourceFile, settings: CompressSettings) -> ffmpeg.Stream | None:
     if not source.is_valid:
         raise Exception("Source is not valid")
 
     if source.type == SourceType.VIDEO:
-        stream = get_compress_video_stream(source, settings) # TODO: Use this stream.
+        return get_compress_video_stream(source, settings)
     elif source.type == SourceType.AUDIO:
         pass
     elif source.type == SourceType.IMAGE:
