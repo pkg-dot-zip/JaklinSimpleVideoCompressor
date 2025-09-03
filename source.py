@@ -21,14 +21,13 @@ def calc_source_type(extension: str):
     image_tuple = tuple(image_types)
     audio_tuple = tuple(audio_types)
 
-    if extension.lower().endswith(video_tuple):
+    if extension.endswith(video_tuple):
         return SourceType.VIDEO
-    elif extension.lower().endswith(image_tuple):
+    elif extension.endswith(image_tuple):
         return SourceType.IMAGE
-    elif extension.lower().endswith(audio_tuple):
+    elif extension.endswith(audio_tuple):
         return SourceType.AUDIO
     return None
-
 
 class SourceFile:
     def __init__(self, filepath):
@@ -36,3 +35,12 @@ class SourceFile:
         self.extension = pathlib.Path(filepath).suffix.lower()
         self.name = pathlib.Path(filepath).stem
         self.type = calc_source_type(self.extension)
+
+        # Do this last.
+        self.is_valid = is_valid_source(self)
+
+def is_valid_source(source: SourceFile):
+    """Returns true if source is valid."""
+    if source.type is None:
+        return False
+    return True
