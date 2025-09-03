@@ -14,6 +14,7 @@ class CompressSettings:
     video_bitrate: int = None
     audio_bitrate: int = None
     should_mute: bool = False # TODO: Implement.
+    format_to_convert_to: str = None
 
 def get_output_filepath(source: SourceFile) -> pathlib.Path:
     output_path = source.filepath.with_stem(source.filepath.stem + "_compressed").with_suffix(source.extension)
@@ -48,7 +49,8 @@ def get_compress_video_stream(source: SourceFile, settings: CompressSettings) ->
     output_params = {
         'video_bitrate': settings.video_bitrate,
         'audio_bitrate': settings.audio_bitrate,
-        'fps': settings.fps
+        'fps': settings.fps,
+        'format': settings.format_to_convert_to,
     }
     output_params = {k: v for k, v in output_params.items() if v is not None} # Filter out parameters that are None
 
