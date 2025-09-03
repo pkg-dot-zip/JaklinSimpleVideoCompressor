@@ -1,17 +1,25 @@
-import pathlib
-
 import ffmpeg
 from ffmpeg import Stream
 
 from compress_settings import CompressSettings
-from source import SourceFile, SourceType
+from source import SourceFile
+from source_type import SourceType
 
-def get_output_filepath(source: SourceFile) -> pathlib.Path:
-    output_path = source.filepath.with_stem(source.filepath.stem + "_compressed").with_suffix(source.extension)
-    return output_path
+
+def get_output_name(source: SourceFile, settings: CompressSettings) -> str:
+    new_name = source.filepath.stem + "_compressed"
+    new_extension = source.filepath.suffix
+
+    if settings.format_to_convert_to is not None:
+        new_extension = settings.format_to_convert_to
+
+    return new_name + new_extension
 
 def compress(source: SourceFile, settings: CompressSettings):
-    handle_compress(source, settings)
+    temp = handle_compress(source, settings)
+
+    if isinstance(temp, Stream):
+        ffmpeg.run(temp)
 
 def handle_compress(source: SourceFile, settings: CompressSettings) -> ffmpeg.Stream | None:
     if not source.is_valid:
@@ -45,6 +53,6 @@ def get_compress_video_stream(source: SourceFile, settings: CompressSettings) ->
     }
     output_params = {k: v for k, v in output_params.items() if v is not None} # Filter out parameters that are None
 
-    stream = ffmpeg.output(audio, video, get_output_filepath(source), **output_params)
+    stream = ffmpeg.output(audio, video, get_output_name(source, settings), **output_params)
 
     return stream
