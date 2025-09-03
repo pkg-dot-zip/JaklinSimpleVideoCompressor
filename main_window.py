@@ -1,7 +1,7 @@
 import pathlib
 import tkinter
 from pathlib import Path
-from tkinter import Tk, Button, filedialog, messagebox
+from tkinter import Tk, Button, filedialog
 
 import valid_file_types
 from source import SourceType
