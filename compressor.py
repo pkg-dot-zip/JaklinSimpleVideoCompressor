@@ -44,11 +44,13 @@ def get_compress_video_stream(source: SourceFile, settings: CompressSettings) ->
     # Then handle the video.
     video = stream.video
 
+    if settings.fps is not None:
+        ffmpeg.filter(video, 'fps', fps=settings.fps, round='up')
+
     # Then set output.
     output_params = {
         'video_bitrate': settings.video_bitrate,
         'audio_bitrate': settings.audio_bitrate,
-        'fps': settings.fps,
         'format': settings.format_to_convert_to,
     }
     output_params = {k: v for k, v in output_params.items() if v is not None} # Filter out parameters that are None
