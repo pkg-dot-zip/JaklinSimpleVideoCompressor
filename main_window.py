@@ -1,10 +1,12 @@
 import tkinter
 from tkinter import Tk, Button
+from tkinter.ttk import Combobox
 
 import app_icon_handler
 import compressor
 import file_dialog_handler
 from compress_settings import VideoCompressSettings
+from quality_settings import Quality
 from source import SourceFile
 from source_type import SourceType
 
@@ -31,6 +33,14 @@ class MainWindow:
         self.compress_button = Button(self.window, text="Compress", command=self.on_compress_button_clicked)
         self.compress_button['state'] = tkinter.DISABLED
         self.compress_button.pack()
+
+        # Quality dropdown menu.
+        quality_dropdown_values = [q.get_readable_name() for q in Quality]
+        self.quality_dropdown = Combobox(self.window, values=quality_dropdown_values)
+        self.quality_dropdown.current(max(Quality, key=lambda m: m.value).value) # SO to colleagues that actually know Python.
+        self.quality_dropdown.pack()
+
+        # File format conversion menu. # TODO ADD
 
     def on_compress_button_clicked(self):
         if not self.current_source_file:
