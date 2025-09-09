@@ -1,12 +1,9 @@
-import pathlib
 import tkinter
-from pathlib import Path
-from tkinter import Tk, Button, filedialog
+from tkinter import Tk, Button
 
 import app_icon_handler
 import compressor
-import source_type
-import valid_file_types
+import file_dialog_handler
 from compress_settings import VideoCompressSettings
 from source import SourceFile
 from source_type import SourceType
@@ -56,7 +53,7 @@ class MainWindow:
             raise ValueError(f"Invalid source type: {s_type}")
 
     def select_file(self):
-        file_path = select_file_from_file_dialog()
+        file_path = file_dialog_handler.select_file_from_file_dialog()
         if file_path is None:
             return
 
@@ -72,23 +69,3 @@ class MainWindow:
 
     def run(self):
         self.window.mainloop()
-
-
-
-def select_file_from_file_dialog() -> Path | None:
-    filetypes = (
-        ('All files', '*.*'),
-        ('Video files', source_type.get_valid_filetypes_for_dialog(SourceType.VIDEO)),
-        ('Image files', source_type.get_valid_filetypes_for_dialog(SourceType.IMAGE)),
-        ('Audio files', source_type.get_valid_filetypes_for_dialog(SourceType.AUDIO)),
-    )
-
-    file_path = filedialog.askopenfilename(
-        title='Open a file',
-        initialdir='/',
-        filetypes=filetypes)
-
-    if file_path is None:
-        return None
-
-    return pathlib.Path(file_path)
