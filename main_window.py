@@ -5,6 +5,7 @@ from tkinter.ttk import Combobox
 import app_icon_handler
 import compressor
 import file_dialog_handler
+import quality_settings
 from compress_settings import VideoCompressSettings
 from quality_settings import Quality
 from source import SourceFile
@@ -47,7 +48,7 @@ class MainWindow:
             self.select_file()
             return
 
-        settings = VideoCompressSettings(fps=12, video_bitrate=400) # TODO: Do not hardcode, instead make configurable.
+        settings = quality_settings.get_video_settings(Quality.get_from_readable_name(self.quality_dropdown.get()))
         compressor.compress(self.current_source_file, settings)
 
     def refresh_ui_based_on_source_type(self, s_type: SourceType):
