@@ -28,8 +28,9 @@ class MainWindow:
         open_file_button.pack()
 
         # The "Compress" button.
-        button = Button(self.window, text="Compress", command=self.on_compress_button_clicked) # TODO: Run compress command.
-        button.pack()
+        self.compress_button = Button(self.window, text="Compress", command=self.on_compress_button_clicked)
+        self.compress_button['state'] = tkinter.DISABLED
+        self.compress_button.pack()
 
     def on_compress_button_clicked(self):
         if not self.current_source_file:
@@ -66,6 +67,9 @@ class MainWindow:
         # Store selected file in var.
         self.current_source_file = SourceFile(file_path)
         self.refresh_ui_based_on_source_type(self.current_source_file.type)
+
+        # Make 'compress' button clickable.
+        self.compress_button['state'] = tkinter.NORMAL
 
     def run(self):
         self.window.mainloop()
