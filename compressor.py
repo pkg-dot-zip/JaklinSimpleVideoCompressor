@@ -1,12 +1,12 @@
 import ffmpeg
 from ffmpeg import Stream
 
-from compress_settings import CompressSettings
+from compress_settings import VideoCompressSettings
 from source import SourceFile
 from source_type import SourceType
 
 
-def get_output_name(source: SourceFile, settings: CompressSettings) -> str:
+def get_output_name(source: SourceFile, settings: VideoCompressSettings) -> str:
     new_name = source.filepath.stem + "_compressed"
     new_extension = source.filepath.suffix
 
@@ -15,13 +15,13 @@ def get_output_name(source: SourceFile, settings: CompressSettings) -> str:
 
     return new_name + new_extension
 
-def compress(source: SourceFile, settings: CompressSettings):
+def compress(source: SourceFile, settings: VideoCompressSettings):
     temp = handle_compress(source, settings)
 
     if isinstance(temp, Stream):
         ffmpeg.run(temp)
 
-def handle_compress(source: SourceFile, settings: CompressSettings) -> ffmpeg.Stream | None:
+def handle_compress(source: SourceFile, settings: VideoCompressSettings) -> ffmpeg.Stream | None:
     if not source.is_valid:
         raise Exception("Source is not valid")
 
@@ -35,7 +35,7 @@ def handle_compress(source: SourceFile, settings: CompressSettings) -> ffmpeg.St
     raise Exception("Unknown source type") # Should literally be impossible at this point.
 
 
-def get_compress_video_stream(source: SourceFile, settings: CompressSettings) -> Stream:
+def get_compress_video_stream(source: SourceFile, settings: VideoCompressSettings) -> Stream:
     stream = ffmpeg.input(source.filepath)
 
     # First handle the audio.

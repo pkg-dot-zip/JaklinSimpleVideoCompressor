@@ -6,7 +6,7 @@ from tkinter import Tk, Button, filedialog
 import compressor
 import source_type
 import valid_file_types
-from compress_settings import CompressSettings
+from compress_settings import VideoCompressSettings
 from source import SourceFile
 from source_type import SourceType
 
@@ -37,7 +37,7 @@ class MainWindow:
             self.select_file()
             return
 
-        settings = CompressSettings(fps=12, video_bitrate=400) # TODO: Do not hardcode, instead make configurable.
+        settings = VideoCompressSettings(fps=12, video_bitrate=400) # TODO: Do not hardcode, instead make configurable.
         compressor.compress(self.current_source_file, settings)
 
     def refresh_ui_based_on_source_type(self, s_type: SourceType):
