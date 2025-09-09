@@ -3,6 +3,7 @@ import tkinter
 from pathlib import Path
 from tkinter import Tk, Button, filedialog
 
+import app_icon_handler
 import compressor
 import source_type
 import valid_file_types
@@ -16,6 +17,7 @@ class MainWindow:
 
     def __init__(self):
         self.window = Tk()
+        app_icon_handler.set_app_icon(self.window)
         self.window.geometry("400x400")
         self.window.title("Jaklin Compressor")
 
